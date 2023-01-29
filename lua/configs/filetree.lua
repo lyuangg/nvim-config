@@ -20,7 +20,7 @@ function M.config()
 			args = {}
 		},
 		filters              = {
-			dotfiles = true,
+			dotfiles = false,
 			custom = {}
 		},
 		git                  = {
@@ -48,7 +48,7 @@ function M.config()
 				global = true,
 			},
 			open_file = {
-				quit_on_open = false,
+				quit_on_open = true,
 			}
 		}
 	}

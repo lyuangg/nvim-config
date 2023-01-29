@@ -6,6 +6,7 @@ filetype plugin indent on "开启文件类型检查, 三个命令: filetype on, 
 set showmode " 在底部显示，当前处于命令模式还是插入模式。
 set showcmd " 命令模式下，在底部显示，当前键入的指令。
 "set mouse=a " 鼠标开启
+set mouse=
 set updatetime=100 
 "set backspace=2 " 解决插入模式下delete/backspce键失效问题
 set hidden " 取消未保存打开新buffer 的限制
@@ -130,9 +131,9 @@ inoremap jj <esc>
 " buffers
 noremap <silent> <Leader>d :bp<cr>:bd #<cr> " 删除buffer
 noremap <silent> <Leader>D :bd!<CR> " 删除buffer
-"noremap <silent> <Leader>bb :e #<CR>
-"noremap <silent> <Leader>bn :bn<CR>
-"noremap <silent> <Leader>bp :bp<CR>
+noremap <silent> <Leader>bb <C-6>
+noremap <silent> <Leader>bn :bn<CR>
+noremap <silent> <Leader>bp :bp<CR>
 
 
 " close buffer

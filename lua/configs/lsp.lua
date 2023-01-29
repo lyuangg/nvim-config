@@ -6,14 +6,16 @@ require("nvim-lsp-installer").setup {
 -- 自动完成
 -- Add additional capabilities supported by nvim-cmp
 local capabilities = vim.lsp.protocol.make_client_capabilities()
--- capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
 capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 local lspconfig = require('lspconfig')
 
+local lspkind = require('lspkind')
 
 -- on_attach 高亮
 local on_attach = function(client, bufnr)
+
+    -- Highlight symbol under cursor
     -- 0.7
     -- if client.resolved_capabilities.document_highlight then
     -- 0.8
@@ -31,6 +33,47 @@ local on_attach = function(client, bufnr)
         augroup END
     ]]
     end
+
+    -- Highlight line number
+    vim.cmd [[
+    highlight! DiagnosticLineNrError guibg=#51202A guifg=#FF0000 gui=bold
+    highlight! DiagnosticLineNrWarn guibg=#51412A guifg=#FFA500 gui=bold
+    highlight! DiagnosticLineNrInfo guibg=#1E535D guifg=#00FFFF gui=bold
+    highlight! DiagnosticLineNrHint guibg=#1E205D guifg=#0000FF gui=bold
+
+    sign define DiagnosticSignError text= texthl=DiagnosticSignError linehl= numhl=DiagnosticLineNrError
+    sign define DiagnosticSignWarn text= texthl=DiagnosticSignWarn linehl= numhl=DiagnosticLineNrWarn
+    sign define DiagnosticSignInfo text= texthl=DiagnosticSignInfo linehl= numhl=DiagnosticLineNrInfo
+    sign define DiagnosticSignHint text= texthl=DiagnosticSignHint linehl= numhl=DiagnosticLineNrHint
+    ]]
+
+    -- Show line diagnostics automatically in hover window
+    vim.api.nvim_create_autocmd("CursorHold", {
+    buffer = bufnr,
+    callback = function()
+        local opts = {
+        focusable = false,
+        close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
+        border = 'rounded',
+        source = 'always',
+        prefix = ' ',
+        scope = 'cursor',
+        }
+        vim.diagnostic.open_float(nil, opts)
+    end
+    })
+
+
+    vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(
+        vim.lsp.handlers.hover,
+        {border = 'rounded'}
+    )
+
+    vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(
+        vim.lsp.handlers.signature_help,
+        {border = 'rounded'}
+    )
+
 end
 
 -- Enable some language servers with the additional completion capabilities offered by nvim-cmp
@@ -111,14 +154,45 @@ cmp.setup {
   }),
   sources = cmp.config.sources({
       { name = 'nvim_lsp' },
-      -- { name = 'vsnip' }, -- For vsnip users.
       { name = 'luasnip' }, -- For luasnip users.
-      -- { name = 'ultisnips' }, -- For ultisnips users.
-      -- { name = 'snippy' }, -- For snippy users.
-     }, {
-      { name = 'buffer'},
+      { name = "buffer" },
       { name = 'path' },
+      { name = 'calc' },
+      -- { name = 'emoji' },
+  }),
+  window = {
+      completion = cmp.config.window.bordered(),
+      documentation = cmp.config.window.bordered(),
+  },
+  formatting = {
+    format = lspkind.cmp_format({
+      mode = 'symbol_text', -- show only symbol annotations
+      maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+      ellipsis_char = '...', -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
+
+      -- The function below will be called before any actual modifications from lspkind
+      -- so that you can provide more controls on popup customization. (See [#30](https://github.com/onsails/lspkind-nvim/pull/30))
+      before = function (entry, vim_item)
+          -- fancy icons and a name of kind
+        vim_item.kind = require("lspkind").presets.default[vim_item.kind] .. " " .. vim_item.kind
+        -- set a name for each source
+        vim_item.menu =
+            ({
+            buffer = "[Buffer]",
+            nvim_lsp = "[LSP]",
+            ultisnips = "[UltiSnips]",
+            nvim_lua = "[Lua]",
+            cmp_tabnine = "[TabNine]",
+            look = "[Look]",
+            path = "[Path]",
+            spell = "[Spell]",
+            calc = "[Calc]",
+            emoji = "[Emoji]"
+        })[entry.source.name]
+        return vim_item
+      end
     })
+  }
 }
 
 -- nvim-autopairs
@@ -136,7 +210,6 @@ cmp.setup.cmdline(':', {
         { name = 'cmdline' }
     })
 })
-
 
 -- 自定义片段
 local ls = require"luasnip"

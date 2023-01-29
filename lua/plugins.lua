@@ -24,14 +24,23 @@ return require('packer').startup(function()
 	use 'hrsh7th/cmp-buffer'
 	use 'hrsh7th/cmp-path'
 	use 'hrsh7th/cmp-cmdline'
+    use 'hrsh7th/cmp-calc'
+    -- use 'hrsh7th/cmp-emoji'
     use 'saadparwaiz1/cmp_luasnip' -- luasnip 
     use 'hrsh7th/cmp-nvim-lsp' -- LSP source for nvim-cmp
     use 'rafamadriz/friendly-snippets' -- 代码片段集合
     use 'hrsh7th/nvim-cmp' -- Autocompletion plugin
     use 'L3MON4D3/LuaSnip' -- Snippets plugin
+    use 'onsails/lspkind-nvim' -- 美化
 
     -- treesitter
-    use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
+    use { 
+        'nvim-treesitter/nvim-treesitter',
+        requires = {
+            'kyazdani42/nvim-web-devicons', -- optional, for file icons
+        },
+        run = ':TSUpdate' 
+    }
 
     -- 主题
     use 'ellisonleao/gruvbox.nvim' 
@@ -41,11 +50,6 @@ return require('packer').startup(function()
     use {
         'nvim-lualine/lualine.nvim',
         requires = { 'kyazdani42/nvim-web-devicons', opt = true }
-    }
-    -- buffer
-    use {
-        'akinsho/bufferline.nvim',
-        requires = 'kyazdani42/nvim-web-devicons'
     }
 
 	-- file tree
@@ -145,5 +149,8 @@ return require('packer').startup(function()
             })
         end
     })
+
+    -- quickfix
+    use {'kevinhwang91/nvim-bqf', ft = 'qf'}
 
 end)
