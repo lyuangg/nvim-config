@@ -1,24 +1,21 @@
 " 基础
-set nocompatible "不兼容vi
+set nocompatible "关闭兼容模式
+set backspace=indent,eol,start  " 关闭兼容模式下退格键使用
 set encoding=utf-8  " 编码
 syntax on    " 语法高亮, 关键字上色
 filetype plugin indent on "开启文件类型检查, 三个命令: filetype on, filetype plugin on, filetype indent on 
 set showmode " 在底部显示，当前处于命令模式还是插入模式。
-set showcmd " 命令模式下，在底部显示，当前键入的指令。
-"set mouse=a " 鼠标开启
-set mouse=
+" set showcmd " 命令模式下，在底部显示，当前键入的指令。
+" set wildmenu
+set mouse=nv " 鼠标
 set updatetime=100 
-"set backspace=2 " 解决插入模式下delete/backspce键失效问题
 set hidden " 取消未保存打开新buffer 的限制
 set clipboard=unnamedplus,unnamed " 剪切板
 set t_Co=256 " 开启256 支持
+"set autochdir " 自动修改目录
 
 " 真彩色支持
 if has("termguicolors")
-    " fix bug for vim
-    set t_8f=^[[38;2;%lu;%lu;%lum
-    set t_8b=^[[48;2;%lu;%lu;%lum
-
     " enable true color
     if $TERM_PROGRAM !=? "Apple_Terminal"
         set termguicolors
@@ -38,7 +35,6 @@ set softtabstop=4 " Tab 转为多少个空格。
 
 " 外观
 set nu "显示行号
-"set relativenumber " 相对行号
 set cursorline  " 高亮当前行
 set wrap " 自动换行, nowap 不自动换行
 set linebreak " 不在单词内换行
@@ -71,10 +67,6 @@ set noerrorbells " 出错时，不要发出响声
 set visualbell " 出错时，发出视觉提示，通常是屏幕闪烁。
 set history=1000 " 记住多少次历史操作
 set autoread "打开文件监视。如果在编辑过程中文件发生外部改变（比如被别的编辑器编辑了），就会发出提示。
-"set autochdir " 自动切换工作目录。
-"set wildmenu  " 使用Tab键补全时,在状态栏显示匹配的列表,方便查看都有哪些命令符合补全条件.
-"set wildmode=full,longest:list "命令模式tab补全，第一次显示所有命令，第二次依次选择
-"set wildmode=list:full "命令模式tab补全，第一次显示所有命令，第二次依次选择
 
 "取消自动添加注释行
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
@@ -97,8 +89,8 @@ let g:loaded_remote_plugins    = 1
 
 
 " 快捷键
-" <Leader>
 let mapleader = " "
+
 " 结尾分号
 noremap <silent> <Leader>, $a,<ESC>
 noremap <silent> <Leader>; $a;<ESC>
@@ -120,6 +112,9 @@ endfunction
 " 移动
 inoremap <C-f> <Right>
 
+" 命令行
+cnoremap <C-a> <Home>
+
 " quit
 nnoremap <Leader>q :q<CR>
 nnoremap <Leader>Q :qall!<CR>
@@ -139,3 +134,35 @@ noremap <silent> <Leader>bp :bp<CR>
 " close buffer
 command BufOnly silent! execute "%bd|e#|bd#"
 
+" startify
+let g:ascii = [
+    \ '  __   ___   _   _    _   _ ',
+    \ '  \ \ / / | | | / \  | \ | |',
+    \ '   \ V /| | | |/ _ \ |  \| |',
+    \ '    | | | |_| / ___ \| |\  |',
+    \ '    |_|  \___/_/   \_\_| \_|',
+    \ ''
+    \]
+let g:startify_custom_header = g:ascii
+let g:startify_lists = [
+\ { 'type': 'files',     'header': ['   MRU']            },
+\ { 'type': 'sessions',  'header': ['   Sessions']       },
+\ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
+\ { 'type': 'commands',  'header': ['   Commands']       },
+\ ]
+let g:startify_files_number = 5
+let g:startify_session_autoload    = 1
+let g:startify_session_persistence = 1
+let g:startify_session_before_save = [ 'silent! tabdo NvimTreeClose' ]
+let g:startify_commands = [
+    \ {'r': ['Refresh Startify', 'Startify']},
+    \ {'S': ['Session Save', 'SSave '.fnamemodify(getcwd(), ':~:t')]},
+    \ {'d': ['Session Delete', 'SDelete']},
+    \ {'c': ['Session Close', 'SClose']},
+    \ ]
+autocmd User Startified setlocal cursorline
+
+
+" preview markdown
+let g:mkdp_browser = 'min'
+let g:mkdp_theme = 'light'

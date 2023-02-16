@@ -7,8 +7,31 @@
 -- vim.fn vim 函数
 -- vim.cmd 执行 vimscript 代码
 
-vim.cmd [[packadd packer.nvim]]
-return require('packer').startup(function()
+-- 自动安装packer
+local ensure_packer = function()
+  local fn = vim.fn
+  local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
+  if fn.empty(fn.glob(install_path)) > 0 then
+    fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
+    vim.cmd [[packadd packer.nvim]]
+    return true
+  end
+  return false
+end
+local packer_bootstrap = ensure_packer()
+
+
+-- 保存此文件自动更新安装软件
+-- 注意PackerCompile改成了PackerSync
+-- plugins.lua改成了plugins-setup.lua，适应本地文件名字
+vim.cmd([[
+  augroup packer_user_config
+    autocmd!
+    autocmd BufWritePost plugins.lua source <afile> | PackerSync
+  augroup end
+]])
+
+return require('packer').startup(function(use)
     -- Packer can manage itself
     use 'wbthomason/packer.nvim'
 
@@ -17,45 +40,49 @@ return require('packer').startup(function()
     use 'nathom/filetype.nvim'
 
 	-- language
-    use 'williamboman/nvim-lsp-installer' -- 语言服务安装
-	use 'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
+    use {
+        "williamboman/mason.nvim",
+        'williamboman/mason-lspconfig.nvim',
+        'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
+    }
 
     -- 自动完成
+    use 'hrsh7th/nvim-cmp' -- Autocompletion plugin
+    use 'hrsh7th/cmp-nvim-lsp' -- LSP source for nvim-cmp
 	use 'hrsh7th/cmp-buffer'
 	use 'hrsh7th/cmp-path'
 	use 'hrsh7th/cmp-cmdline'
     use 'hrsh7th/cmp-calc'
-    -- use 'hrsh7th/cmp-emoji'
     use 'saadparwaiz1/cmp_luasnip' -- luasnip 
-    use 'hrsh7th/cmp-nvim-lsp' -- LSP source for nvim-cmp
     use 'rafamadriz/friendly-snippets' -- 代码片段集合
-    use 'hrsh7th/nvim-cmp' -- Autocompletion plugin
     use 'L3MON4D3/LuaSnip' -- Snippets plugin
     use 'onsails/lspkind-nvim' -- 美化
 
     -- treesitter
-    use { 
+    use {
         'nvim-treesitter/nvim-treesitter',
-        requires = {
-            'kyazdani42/nvim-web-devicons', -- optional, for file icons
-        },
-        run = ':TSUpdate' 
+        run = function()
+            local ts_update = require('nvim-treesitter.install').update({ with_sync = true })
+            ts_update()
+        end,
     }
 
     -- 主题
-    use 'ellisonleao/gruvbox.nvim' 
-
+    use 'ellisonleao/gruvbox.nvim'
 
     -- 状态栏
     use {
         'nvim-lualine/lualine.nvim',
-        requires = { 'kyazdani42/nvim-web-devicons', opt = true }
+        -- requires = { 'kyazdani42/nvim-web-devicons', opt = true }
+        -- 和 file tree 冲突
     }
 
 	-- file tree
 	use {
-		'kyazdani42/nvim-tree.lua',
-		requires = 'kyazdani42/nvim-web-devicons'
+        'nvim-tree/nvim-tree.lua',
+        requires = {
+            'nvim-tree/nvim-web-devicons', -- optional, for file icons
+        }
 	}
 
 	-- outline
@@ -82,14 +109,18 @@ return require('packer').startup(function()
     -- git
     use {
         'lewis6991/gitsigns.nvim',
-        -- tag = 'release',
     }
 
     -- 颜色
     use ({
         "norcalli/nvim-colorizer.lua",
         config = function()
-            require("colorizer").setup({})
+            require("colorizer").setup({
+                "css";
+                "html";
+                "vue";
+                "php";
+            })
         end
     })
 
@@ -125,11 +156,15 @@ return require('packer').startup(function()
     })
 
     -- substitute
+    -- 多次复制
+    -- siwp
     use({
         "gbprod/substitute.nvim",
         config = function()
             require("substitute").setup({
             -- your configuration comes here
+            -- or leave it empty to use the default settings
+            -- refer to the configuration section below
             })
         end
     })
@@ -152,5 +187,40 @@ return require('packer').startup(function()
 
     -- quickfix
     use {'kevinhwang91/nvim-bqf', ft = 'qf'}
+
+    -- input
+    -- use({
+    --     "keaising/im-select.nvim",
+    --     config = function()
+    --         require("im_select").setup({
+    --         })
+    --     end
+    -- })
+
+
+    -- markdown preview
+    use({
+        "iamcco/markdown-preview.nvim",
+        run = function() vim.fn["mkdp#util#install"]() end,
+    })
+
+    -- image paste
+    use 'ekickx/clipboard-image.nvim'
+
+
+    -- test
+    use {
+        "klen/nvim-test",
+        config = function()
+            require('nvim-test').setup()
+        end
+    }
+
+
+    -- Automatically set up your configuration after cloning packer.nvim
+    -- Put this at the end after all plugins
+    if packer_bootstrap then
+        require('packer').sync()
+    end
 
 end)

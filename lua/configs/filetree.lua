@@ -1,57 +1,51 @@
-local M = {}
-function M.config()
-	-- nvim-tree config
-	require 'nvim-tree'.setup {
-		disable_netrw        = true,
-		hijack_netrw         = true,
-		open_on_setup        = false,
-		ignore_ft_on_setup   = {},
-		auto_reload_on_write = true,
-		open_on_tab          = false,
-		hijack_cursor        = false,
-		update_cwd           = false,
-		update_focused_file  = {
-			enable      = true,
-			update_cwd  = true,
-			ignore_list = {}
-		},
-		system_open          = {
-			cmd  = nil,
-			args = {}
-		},
-		filters              = {
-			dotfiles = false,
-			custom = {}
-		},
-		git                  = {
-			enable = true,
-			ignore = false,
-			timeout = 500,
-		},
-		view                 = {
-            adaptive_size = true,
-			hide_root_folder = false,
-			side = 'left',
-			mappings = {
-				custom_only = false,
-				list = {
-                    { key = "u", action = "dir_up" },
-                }
-			},
-		},
-		trash                = {
-			cmd = "trash",
-			require_confirm = true
-		},
-		actions              = {
-			change_dir = {
-				global = true,
-			},
-			open_file = {
-				quit_on_open = true,
-			}
-		}
-	}
+-- nvim-tree config
+
+require("nvim-tree").setup({
+    disable_netrw = true,
+    update_focused_file  = {
+        enable      = true,
+        update_cwd  = true,
+        ignore_list = {}
+    },
+    view = {
+        width = 30,
+        mappings = {
+            list = {
+                { key = "u", action = "dir_up" },
+            },
+        },
+    },
+    renderer = {
+        group_empty = true,
+        highlight_opened_files = "icon",
+    },
+    filters = {
+        dotfiles = true,
+    },
+    actions = {
+        change_dir = {
+            global = false,
+        },
+        open_file = {
+            quit_on_open = true
+        }
+    }
+})
+
+local function open_nvim_tree(data)
+
+  -- buffer is a directory
+  local directory = vim.fn.isdirectory(data.file) == 1
+
+  if not directory then
+    return
+  end
+
+  -- change to the directory
+  vim.cmd.cd(data.file)
+
+  -- open the tree
+  require("nvim-tree.api").tree.open()
 end
 
-return M
+vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = open_nvim_tree })

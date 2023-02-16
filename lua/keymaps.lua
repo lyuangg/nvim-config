@@ -1,10 +1,8 @@
 
 -- f: file tree
-vim.keymap.set('n', '<leader>e', ':NvimTreeFocus<cr>')
+vim.keymap.set('n', '<leader>e', ':NvimTreeFocus<cr>', { noremap=true, silent=true })
+-- vim.keymap.set('n', '<leader>e', '::NvimTreeFindFileToggle<cr>', { noremap=true, silent=true })
 
-
--- buffers
--- vim.keymap.set('n', '<leader>1', function() require("bufferline").go_to_buffer(1, true) end, { noremap=true, silent=true })
 
 vim.keymap.set('n', '<leader>1', ':LualineBuffersJump! 1<cr>', { noremap=true, silent=true })
 vim.keymap.set('n', '<leader>2', ':LualineBuffersJump! 2<cr>', { noremap=true, silent=true })
@@ -17,16 +15,20 @@ vim.keymap.set('n', '<leader>8', ':LualineBuffersJump! 8<cr>', { noremap=true, s
 vim.keymap.set('n', '<leader>9', ':LualineBuffersJump! 9<cr>', { noremap=true, silent=true })
 
 -- outline
-vim.keymap.set('n', '<leader>o', ':AerialOpen<cr>')
+vim.keymap.set('n', '<leader>o', ':AerialOpen<cr>', { noremap=true, silent=true })
 
 -- telescope
-vim.keymap.set('n', '<leader>ff', function() require'telescope.builtin'.find_files{} end)
-vim.keymap.set('n', '<leader>fb', function() require'telescope.builtin'.buffers{} end)
-vim.keymap.set('n', '<leader>fg', function() require'telescope.builtin'.live_grep{} end)
--- vim.keymap.set({'n', 'i'}, '<C-p>', function() require'telescope.builtin'.registers{} end)
+vim.keymap.set('n', '<leader>ff', function() require'telescope.builtin'.find_files{} end, { noremap=true, silent=true })
+vim.keymap.set('n', '<leader>fb', function() require'telescope.builtin'.buffers{} end, { noremap=true, silent=true })
+vim.keymap.set('n', '<leader>fg', function() require'telescope.builtin'.live_grep{} end, { noremap=true, silent=true })
+vim.keymap.set('n', '<leader>fc', function() require'telescope.builtin'.commands{} end, { noremap=true, silent=true })
+vim.keymap.set('n', '<leader>fh', function() require'telescope.builtin'.help_tags{} end, { noremap=true, silent=true })
+vim.keymap.set('n', '<leader>fk', function() require'telescope.builtin'.keymaps{} end, { noremap=true, silent=true })
+vim.keymap.set('n', '<leader>fB', function() require'telescope.builtin'.builtin{} end, { noremap=true, silent=true })
+vim.keymap.set('n', '<leader>fd', function() require'telescope.builtin'.diagnostics{} end, { noremap=true, silent=true })
 
 -- startify
-vim.keymap.set('n', '<leader>n', ':Startify<cr>')
+vim.keymap.set('n', '<leader>n', ':Startify<cr>', { noremap=true, silent=true })
 
 -- lsp 快捷键
 vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { noremap=true, silent=true })
@@ -38,36 +40,11 @@ vim.keymap.set('n', '<leader>lh', vim.lsp.buf.signature_help, { noremap=true, si
 vim.keymap.set('n', '<leader>la', vim.lsp.buf.code_action, { noremap=true, silent=true })
 vim.keymap.set('n', '<leader>ln', vim.diagnostic.goto_next, { noremap=true, silent=true })
 vim.keymap.set('n', '<leader>lp', vim.diagnostic.goto_prev, { noremap=true, silent=true })
-local isshowdiagonstic = true
-vim.keymap.set('n', '<leader>ld', function()
-    if isshowdiagonstic == true
-    then
-        vim.diagnostic.hide()
-        isshowdiagonstic = false
-    else
-        vim.diagnostic.show()
-        isshowdiagonstic = true
-    end
-end, { noremap=true, silent=true })
 
--- vim.keymap.set('n', '<leader>ll', ':LspStop<cr>', { noremap=true, silent=true })
-local isenablelsp = true
-vim.keymap.set('n', '<leader>ll', function() 
-    if isenablelsp == true
-    then
-        vim.cmd('LspStop')
-        isenablelsp = false
-    else
-        vim.cmd('LspStart')
-        isenablelsp = true
-    end
-end, { noremap=true, silent=true })
-
--- 折叠
--- 开启 Folding
-vim.wo.foldmethod = 'expr'
-vim.wo.foldexpr = 'nvim_treesitter#foldexpr()'
-vim.wo.foldlevel = 99
+-- 代码折叠
+vim.opt.foldmethod     = 'expr'
+vim.opt.foldexpr       = 'nvim_treesitter#foldexpr()'
+vim.cmd("set nofoldenable")
 
 -- substitute
 vim.keymap.set("n", "s", "<cmd>lua require('substitute').operator()<cr>", { noremap = true, silent=true  })
@@ -75,4 +52,13 @@ vim.keymap.set("n", "ss", "<cmd>lua require('substitute').line()<cr>", { noremap
 vim.keymap.set("n", "S", "<cmd>lua require('substitute').eol()<cr>", { noremap = true, silent=true  })
 vim.keymap.set("x", "s", "<cmd>lua require('substitute').visual()<cr>", { noremap = true, silent=true  })
 
+-- comment
+vim.keymap.set("n", '<leader>/', ":CommentToggle<cr>", { noremap = true, silent=true  })
+
+
+-- paste image
+vim.keymap.set("n", '<leader>p', ":PasteImg<cr>", {noremap= true, silent=true })
+
+-- test
+vim.keymap.set("n", '<leader>t', ":TestNearest<cr>", {noremap= true, silent=true })
 
