@@ -1,0 +1,32 @@
+-- require"bufferline".setup {
+--     options = {
+--         mode = "buffers",
+--         numbers = "ordinal",
+--         separator_style = 'thick',
+--         always_show_bufferline = false,
+--         show_buffer_close_icons = true,
+--         show_close_icon = true,
+--         color_icons = true,
+--         diagnostics = "nvim_lsp",
+--         indicator = {
+--             icon = '', -- this should be omitted if indicator style is not 'icon'
+--             style = 'icon', --- | 'underline' | 'none',
+--         },
+--         offsets = {
+--             {
+--                 filetype = "NvimTree",
+--                 text = function()
+--                     return vim.fn.getcwd()
+--                 end,
+--                 text_align = "left",
+--                 highlight = "Directory",
+--                 separator = true,
+--             }
+--         },
+--         hover = {
+--             enabled = true,
+--             delay = 200,
+--             reveal = {'close'}
+--         },
+--    },
+-- }
