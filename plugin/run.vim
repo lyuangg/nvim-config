@@ -12,7 +12,8 @@ function! Run()
         " exec l:fpath
         exec "MarkdownPreview"
     elseif &filetype == 'javascript'
-        exec "bo 20split term://node ". fnameescape(expand("%"))
+        " exec "bo 20split term://node ". fnameescape(expand("%"))
+        :!node %
     elseif &filetype == 'php'
         call ShowCmdResultInSplit('php '.expand("%"))
         " exec "bo 20split term://php ". fnameescape(expand("%"))

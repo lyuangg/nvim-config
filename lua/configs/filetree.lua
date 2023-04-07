@@ -51,7 +51,9 @@ local function open_nvim_tree(data)
     end
 
     -- change to the directory
-    vim.cmd.cd(data.file)
+    if directory then
+        vim.cmd.cd(data.file)
+    end
 
     -- open the tree
     require("nvim-tree.api").tree.open()
@@ -59,23 +61,3 @@ end
 
 vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = open_nvim_tree })
 
-
-
--- local nvim_tree_events = require('nvim-tree.events')
--- local bufferline_api = require('bufferline.api')
-
--- local function get_tree_size()
---   return require'nvim-tree.view'.View.width
--- end
-
--- nvim_tree_events.subscribe('TreeOpen', function()
---   bufferline_api.set_offset(get_tree_size())
--- end)
-
--- nvim_tree_events.subscribe('Resize', function()
---   bufferline_api.set_offset(get_tree_size())
--- end)
-
--- nvim_tree_events.subscribe('TreeClose', function()
---   bufferline_api.set_offset(0)
--- end)

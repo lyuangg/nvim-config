@@ -24,6 +24,9 @@ local function get_visual_selection()
   return selected_text
 end
 
+--------------------------------------------------------------------------------------------
+-- gx 打开url
+--------------------------------------------------------------------------------------------
 -- 获取当前选中的文本, 如果没有选中文本则获取光标下的单词，然后打开浏览器访问该网址
 function Open_url()
     local url = get_visual_selection()
@@ -39,6 +42,9 @@ function Open_url()
     vim.fn.jobstart({"open", url})
 end
 
+--------------------------------------------------------------------------------------------
+-- gf 打开文件
+--------------------------------------------------------------------------------------------
 -- 打开选中的文本或光标下的单词对应的文件
 function Open_file()
     local file_path = get_visual_selection()
@@ -69,3 +75,36 @@ function Open_file()
 
     print("File not found: " .. file_path)
 end
+
+--------------------------------------------------------------------------------------------
+-- 输入法切换
+--------------------------------------------------------------------------------------------
+-- 记录当前输入法
+Current_input_method = vim.fn.system("/usr/local/bin/macism")
+
+-- 切换到英文输入法
+function Switch_to_English_input_method()
+    Current_input_method = vim.fn.system("/usr/local/bin/macism")
+    if Current_input_method ~= "com.apple.keylayout.ABC\n" then
+        vim.fn.system("/usr/local/bin/macism com.apple.keylayout.ABC")
+    end
+end
+
+-- 设置输入法
+function Set_input_method()
+    if Current_input_method ~= "com.apple.keylayout.ABC\n" then
+        vim.fn.system("/usr/local/bin/macism " .. string.gsub(Current_input_method, "\n", ""))
+    end
+end
+
+-- 进入normal模式时切换为英文输入法
+vim.cmd([[
+augroup input_method
+  autocmd!
+  autocmd InsertEnter * :lua Set_input_method()
+  autocmd InsertLeave * :lua Switch_to_English_input_method()
+augroup END
+]])
+
+
+
