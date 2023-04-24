@@ -12,6 +12,7 @@ cmp.setup {
             luasnip.lsp_expand(args.body)
         end,
     },
+    preselect = cmp.PreselectMode.None,
     -- 默认选中第一个
     -- completion = {
     --     completeopt = 'menu,menuone,noinsert'

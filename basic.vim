@@ -34,6 +34,7 @@ set softtabstop=4 " Tab 转为多少个空格。
 
 " 外观
 set nu "显示行号
+set rnu " 显示相对行号
 set cursorline  " 高亮当前行
 set wrap " 自动换行, nowap 不自动换行
 set linebreak " 不在单词内换行
@@ -42,6 +43,10 @@ set scrolloff=7                 " 保持在光标上下最少行数
 set sidescrolloff=15            " 水平滚动
 set laststatus=2 " 是否显示状态栏。0 表示不显示，1 表示只在多窗口时显示，2 表示显示。
 set ruler " 在状态栏显示光标的当前位置（位于哪一行哪一列）。
+
+" 显示tab 和 结尾空格
+set list
+set listchars=tab:>~,trail:.
 
 set guifont=SauceCodePro\ Nerd\ Font\ Mono:h12
 

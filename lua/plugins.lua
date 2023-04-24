@@ -249,6 +249,10 @@ return require('packer').startup(function(use)
     -- git diff
     use { 'sindrets/diffview.nvim', requires = 'nvim-lua/plenary.nvim' }
 
+
+    -- obsidian
+    use "epwalsh/obsidian.nvim" 
+
     -- Automatically set up your configuration after cloning packer.nvim
     -- Put this at the end after all plugins
     if packer_bootstrap then

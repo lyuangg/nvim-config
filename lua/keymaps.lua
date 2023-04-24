@@ -18,6 +18,7 @@ vim.keymap.set('n', '<leader>9', ':LualineBuffersJump! 9<cr>', { noremap=true, s
 
 -- outline
 vim.keymap.set('n', '<leader>o', ':AerialOpen<cr>', { noremap=true, silent=true })
+vim.keymap.set('n', '<leader>oo', ':AerialOpen<cr>', { noremap=true, silent=true })
 
 -- telescope
 vim.keymap.set('n', '<leader>ff', function() require'telescope.builtin'.find_files{} end, { noremap=true, silent=true })
@@ -78,9 +79,26 @@ vim.keymap.set("n", '<leader>gn', ":Gitsigns next_hunk<cr>", {noremap= true, sil
 vim.keymap.set("n", '<leader>gp', ":Gitsigns prev_hunk<cr>", {noremap= true, silent=true })
 
 -- 使用gx命令打开链接
-vim.keymap.set("n", "gx", ":lua Open_url()<cr>", {noremap= true, silent=true })
-vim.keymap.set("x", "gx", ":lua Open_url()<cr>", {noremap= true, silent=true })
+vim.keymap.set("n", "gx", ":lua Open_url('n')<cr>", {noremap= true, silent=true })
+vim.keymap.set("x", "gx", ":lua Open_url('v')<cr>", {noremap= true, silent=true })
 
 -- openfile
-vim.api.nvim_set_keymap('n', 'gf', ':lua Open_file()<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('v', 'gf', ':lua Open_file()<CR>', { noremap = true, silent = true })
+-- vim.keymap.set("n", "gf", ":lua Open_file('n')<cr>", {noremap= true, silent=true })
+vim.keymap.set("x", "gf", ":lua Open_file('v')<cr>", {noremap= true, silent=true })
+
+
+-- obsidian
+vim.keymap.set(
+  "n",
+  "gf",
+  function()
+    if require('obsidian').util.cursor_on_markdown_link() then
+      return "<cmd>ObsidianFollowLink<CR>"
+    else
+      return "<cmd>lua Open_file('n')<CR>"
+    end
+  end,
+  { noremap = false, expr = true}
+)
+vim.keymap.set("n", "<leader>of", ":ObsidianQuickSwitch<cr>", {noremap= true, silent=true })
+vim.keymap.set("n", "<leader>ob", ":ObsidianOpen<cr>", {noremap= true, silent=true })

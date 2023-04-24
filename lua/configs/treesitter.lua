@@ -7,7 +7,7 @@ require 'nvim-treesitter.configs'.setup {
     highlight = {
         enable = true,
         disable = {},
-        additional_vim_regex_highlighting = false, -- disable standard vim highlighting
+        additional_vim_regex_highlighting = {"markdown"}, -- disable standard vim highlighting
     },
     -- matchup = {
     --     enable = true,              -- mandatory, false will disable the whole extension

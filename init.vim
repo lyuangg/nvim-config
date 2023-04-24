@@ -21,6 +21,7 @@ lua require("configs.treesitter")
 lua require("configs.clipboardimg")
 lua require("configs.telescope")
 lua require("configs.todo")
+lua require("configs.obsidian")
 lua require("scripts.my")
 
 " lua 插件快捷键
